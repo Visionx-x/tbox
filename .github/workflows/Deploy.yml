@@ -1,0 +1,65 @@
+name: Deploy to Heroku
+
+on:
+  workflow_dispatch:
+    inputs:
+      HEROKU_APP_NAME:
+        description: "Heroku App Name"
+        required: true
+      HEROKU_API_KEY:
+        description: "Heroku API Key"
+        required: true
+      HEROKU_EMAIL:
+        description: "Heroku Email Address"
+        required: true
+      HEROKU_TEAM_NAME:
+        description: "Heroku Team Name"
+        required: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout deploy branch
+        uses: actions/checkout@v4
+
+      - name: Delete unnecessary directories and files
+        run: |
+          # Directories to delete
+          for dir in bot qBittorrent web; do
+            if [ -d "./$dir" ]; then
+              echo "Deleting directory: $dir"
+              rm -rf ./$dir
+            else
+              echo "Directory not found: $dir"
+            fi
+          done
+
+          # Delete a2c.conf if it exists
+          if [ -f "./a2c.conf" ]; then
+            echo "Deleting file: a2c.conf"
+            rm -f ./a2c.conf
+          else
+            echo "File not found: a2c.conf"
+          fi
+
+      - name: Set Heroku Stack to Container
+        run: heroku stack:set container --app ${{ inputs.HEROKU_APP_NAME }}
+        env:
+          HEROKU_API_KEY: ${{ inputs.HEROKU_API_KEY }}
+
+      - name: Deploy to Heroku with Docker
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ inputs.HEROKU_API_KEY }}
+          heroku_app_name: ${{ inputs.HEROKU_APP_NAME }}
+          heroku_email: ${{ inputs.HEROKU_EMAIL }}
+          usedocker: true
+          docker_heroku_process_type: web
+          dontuseforce: false
+          justlogin: false
+
+      - name: Restart Heroku App
+        run: heroku restart --app ${{ inputs.HEROKU_APP_NAME }}
+        env:
+          HEROKU_API_KEY: ${{ inputs.HEROKU_API_KEY }}
