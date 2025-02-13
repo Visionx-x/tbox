@@ -116,14 +116,4 @@ async def upload_video(client, file_path, thumbnail_path, video_title, reply_msg
     try:
         file_size = os.path.getsize(file_path)
         uploaded = 0
-        start_time = datetime.now()
-        last_update_time = time.time()
-
-        async def progress(current, total):
-            nonlocal uploaded, last_update_time
-            uploaded = current
-            percentage = (current / total) * 100
-            elapsed_time_seconds = (datetime.now() - start_time).total_seconds()
-
-            if time.time() - last_update_time > 2:
-                progress_text = format
+        start_time = datetime.now
