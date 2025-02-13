@@ -126,6 +126,4 @@ async def upload_video(client, file_path, thumbnail_path, video_title, reply_msg
             elapsed_time_seconds = (datetime.now() - start_time).total_seconds()
 
             if time.time() - last_update_time > 2:
-                progress_text = format_progress_bar(
-                    filename=video_title,
-                    percentage=
+                progress_text = format
