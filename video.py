@@ -188,7 +188,7 @@ async def upload_video(client, file_path, thumbnail_path, video_title, reply_msg
         await message.delete()
 
     await reply_msg.delete()
-    sticker_message = await message.reply_sticker("CAACAgIAAxkBAAEZdwRmJhCNfFRnXwR_lVKU1L9F3qzbtAAC4gUAAj-VzApzZV-v3phk4DQE")
+    sticker_message = await message.reply_sticker("CAACAgUAAxkBAAENw2xnqshqpP3neuacPqlOhqH5f2jMfwACUBMAAuCPGFbErxOwKx4X-TYE")
     os.remove(file_path)
     os.remove(thumbnail_path)
     await asyncio.sleep(5)
